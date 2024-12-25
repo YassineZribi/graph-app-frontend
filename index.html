@@ -1,13 +1,206 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini Projet</title>
+</head>
+
+<body>
+  <nav class="navbar bg-dark navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="/vite.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+        Mini Projet
+      </a>
+    </div>
+  </nav>
+  <div class="main">
+    <div class="left">
+      <div id="network"></div>
+    </div>
+    <div class="right">
+      <div class="d-grid gap-4">
+        <button type="button" class="btn btn-outline-dark" id="showLocalDataBtn">Show graph (local)</button>
+        <button type="button" class="btn btn-outline-dark" id="loadGraphBtn">Load graph</button>
+        <button type="button" class="btn btn-outline-dark" id="saveDataBtn">Save graph</button>
+        <button type="button" class="btn btn-outline-dark" id="transformGraphBtn">Transform graph</button>
+        <button type="button" class="btn btn-outline-danger" id="deleteGraphBtn">Delete graph</button>
+      </div>
+      <!-- ✅ Accordion pour Algorithme de Dijkstra -->
+      <div class="accordion mt-4" id="dijkstraAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingDijkstra">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapseDijkstra" aria-expanded="false" aria-controls="collapseDijkstra">
+              Algorithme de Dijkstra
+            </button>
+          </h2>
+          <div id="collapseDijkstra" class="accordion-collapse collapse" aria-labelledby="headingDijkstra"
+            data-bs-parent="#dijkstraAccordion">
+            <div class="accordion-body">
+              <form id="dijkstraForm">
+                <div class="mb-3">
+                  <label for="startNodeSelect" class="form-label">Nœud de Départ :</label>
+                  <select id="startNodeSelect" class="form-select">
+                    <option value="">-</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="endNodeSelect" class="form-label">Nœud d'Arrivée :</label>
+                  <select id="endNodeSelect" class="form-select">
+                    <option value="">-</option>
+                  </select>
+                </div>
+                <button type="button" id="calculateDijekstraBtn" class="btn btn-outline-primary">Calculer</button>
+                <button type="button" id="resetDijkstraBtn" class="btn btn-outline-warning">Vider</button>
+                <button type="button" id="closeDijkstraAccordionBtn" class="btn btn-outline-secondary">Fermer</button>
+              </form>
+              <div id="dijekstra-result">
+                <div id="dijekstra-path"></div>
+                <div id="dijekstra-distance"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Popover pour Ajouter un Nœud -->
+  <div id="addPopover" class="popover fade show position-absolute" style="display:none;">
+    <div class="popover-header d-flex justify-content-between align-items-center">
+      Ajouter un Nœud
+      <button type="button" class="btn-close" aria-label="Close" id="closeAddNodePopoverBtn"></button>
+    </div>
+    <div class="popover-body">
+      <input type="text" id="addNodeLabel" class="form-control" placeholder="Label (max 2 caractères)">
+      <button class="btn btn-sm btn-primary mt-2" id="addNodeBtn">Ajouter</button>
+    </div>
+  </div>
+
+  <!-- ✅ Popover pour Modifier un Nœud et Gérer les Liens -->
+  <div id="editNodePopover" class="popover fade show position-absolute" style="display:none;">
+    <div class="popover-header d-flex justify-content-between align-items-center">
+      Modifier le Nœud
+      <button type="button" class="btn-close" aria-label="Close" id="closeEditNodePopoverBtn"></button>
+    </div>
+    <div class="popover-body">
+      <!-- ✅ Modifier le Label du Nœud -->
+      <div>
+        <div class="form-group">
+          <label>Label :</label>
+          <input type="text" id="editNodeLabel" class="form-control">
+        </div>
+        <button class="btn btn-sm btn-primary mt-2" id="editNodeBtn">Modifier</button>
+        <button class="btn btn-sm btn-danger mt-2" id="deleteNodeBtn">Supprimer</button>
+      </div>
+
+      <div class="vr"></div>
+
+      <div style="flex-grow: 1;">
+        <!-- ✅ Lier ce Nœud à un Autre Nœud -->
+        <h6>Lier à un autre nœud</h6>
+        <div class="form-group">
+          <label for="linkNodeSelect">Sélectionner un nœud :</label>
+          <select id="linkNodeSelect" class="form-select">
+            <option value="">-</option>
+          </select>
+        </div>
+        <div id="linkDetails" style="display:none;">
+          <!-- ✅ Label de l'Arête -->
+          <div class="form-group mt-2">
+            <label for="edgeLabel">Label de l'arête :</label>
+            <input type="number" id="edgeLabel" class="form-control" placeholder="Nombre">
+          </div>
+          <!-- ✅ Arête Orientée -->
+          <div class="form-check mt-2">
+            <input type="checkbox" id="isDirectedEdge" class="form-check-input">
+            <label class="form-check-label" for="isDirectedEdge">Orienté</label>
+          </div>
+          <button class="btn btn-sm btn-success mt-2" id="createEdgeBtn">Créer Lien</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Popover pour Modifier un Lien (Edge) -->
+  <div id="editEdgePopover" class="popover fade show position-absolute" style="display:none;">
+    <div class="popover-header d-flex justify-content-between align-items-center">
+      Modifier le Lien
+      <button type="button" class="btn-close" aria-label="Close" id="closeEditEdgePopoverBtn"></button>
+    </div>
+    <div class="popover-body">
+      <!-- ✅ Modifier le Label du Lien -->
+      <div class="form-group">
+        <label>Label :</label>
+        <input type="text" id="editEdgeLabel" class="form-control">
+      </div>
+      <button class="btn btn-sm btn-primary mt-2" id="editEdgeBtn">Modifier</button>
+      <button class="btn btn-sm btn-danger mt-2" id="deleteEdgeBtn">Supprimer</button>
+    </div>
+  </div>
+
+  <!-- ✅ Modal de Confirmation pour la Suppression d'un Graphe -->
+  <div class="modal fade" id="confirmDeleteGraphModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmer la Suppression</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          Voulez-vous vraiment supprimer ce graphe ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteGraphBtn">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Modal de Confirmation pour la Suppression d'un Nœud -->
+  <div class="modal fade" id="confirmDeleteNodeModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmer la Suppression</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          Voulez-vous vraiment supprimer ce nœud ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteNodeBtn">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Modal de Confirmation pour la Suppression d'un Lien -->
+  <div class="modal fade" id="confirmEdgeDeleteModal" tabindex="-1" aria-labelledby="confirmEdgeDeleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmEdgeDeleteModalLabel">Confirmer la Suppression</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+          Êtes-vous sûr de vouloir supprimer ce lien ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteEdgeBtn">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>
