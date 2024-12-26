@@ -13,9 +13,14 @@
 }
 
 #network {
-  height: calc(100vh - (var(--navbar-height) + 1px * 2 + 1px));
+  height: calc(100vh - (var(--navbar-height) /* + 1px * 2 + 1px*/));
   border: 1px solid lightgray;
-  margin: 1px;
+  /* margin: 1px; */
+  /* cursor: pointer; */
+  background-color: #f9fafc; // Blanc cassé
+  background-color: #f4f4f9; // Gris très clair
+  background-color: #eef7ff; // Bleu pâle
+  background-color: #faf5e6; // Beige doux
 }
 
 .popover {

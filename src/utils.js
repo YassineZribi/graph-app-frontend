@@ -10,3 +10,5 @@ export function formatPath(nodes) {
     }
     return nodes.map(node => `<b>${node.label}</b>`).join('<span>&#8594;</span>');
 }
+
+export const NAVBAR_HEIGHT = parseInt(getComputedStyle(document.getElementsByClassName("navbar")?.[0])?.height)

@@ -25,7 +25,7 @@
       <div class="d-grid gap-4">
         <button type="button" class="btn btn-outline-dark" id="showLocalDataBtn">Show graph (local)</button>
         <button type="button" class="btn btn-outline-dark" id="loadGraphBtn">Load graph</button>
-        <button type="button" class="btn btn-outline-dark" id="saveDataBtn">Save graph</button>
+        <button type="button" class="btn btn-outline-dark" id="saveGraphBtn">Save graph</button>
         <button type="button" class="btn btn-outline-dark" id="transformGraphBtn">Transform graph</button>
         <button type="button" class="btn btn-outline-danger" id="deleteGraphBtn">Delete graph</button>
       </div>
@@ -54,9 +54,13 @@
                     <option value="">-</option>
                   </select>
                 </div>
-                <button type="button" id="calculateDijekstraBtn" class="btn btn-outline-primary">Calculer</button>
-                <button type="button" id="resetDijkstraBtn" class="btn btn-outline-warning">Vider</button>
-                <button type="button" id="closeDijkstraAccordionBtn" class="btn btn-outline-secondary">Fermer</button>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <button type="button" id="calculateDijekstraBtn" class="btn btn-outline-primary">Calculer</button>
+                    <button type="button" id="resetDijkstraBtn" class="btn btn-outline-secondary">Vider</button>
+                  </div>
+                  <button type="button" id="resetAndCloseDijkstraAccordionBtn" class="btn btn-outline-warning">Vider et fermer</button>
+                </div>
               </form>
               <div id="dijekstra-result">
                 <div id="dijekstra-path"></div>

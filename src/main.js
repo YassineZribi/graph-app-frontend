@@ -1,13 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 // import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import 'notyf/notyf.min.css'
 import './style.css'
 
 import { DataSet, Network } from 'vis-network/standalone'
-import { Notyf } from 'notyf'
-import axios from 'axios'
 import * as bootstrap from 'bootstrap'
-import { formatPath, getTotalPathDistance } from './utils'
+import notyf from './notyf-utils'
+import { formatPath, getTotalPathDistance, NAVBAR_HEIGHT } from './utils'
+import graphService from './services/graphService'
+import dijekstraService from './services/dijekstraService'
+import { applyPointsBackground, applyRectanglesBackground } from './network-background'
 
 
 const nodes = new DataSet();
@@ -17,63 +18,16 @@ let selectedNodeId = null;
 let selectedEdgeId = null;
 let lastClickPosition = { x: 0, y: 0 };
 
-const NAVBAR_HEIGHT = parseInt(getComputedStyle(document.getElementsByClassName("navbar")?.[0])?.height)
-
 // Dijekstra
 let startNode = null;
 let endNode = null;
-
-var notyf = new Notyf({
-  dismissible: true
-});
 
 const container = document.getElementById('network');
 const data = { nodes, edges };
 const options = { /* physics: false, interaction: { dragNodes: true }, */ edges: { smooth: true } };
 const network = new Network(container, data, options);
 
-
-/*
-network.on("beforeDrawing", function (ctx) {
-
-    var width = ctx.canvas.clientWidth;
-    var height = ctx.canvas.clientHeight;
-    var spacing = 20;
-    var gridExtentFactor = 4;
-    ctx.strokeStyle = "lightgrey";
-
-    // draw grid
-    ctx.beginPath();
-    for (var x = -width * gridExtentFactor; x <= width * gridExtentFactor; x += spacing) {
-        ctx.moveTo(x, height * gridExtentFactor);
-        ctx.lineTo(x, -height * gridExtentFactor);
-    }
-    for (var y = -height * gridExtentFactor; y <= height * gridExtentFactor; y += spacing) {
-        ctx.moveTo(width * gridExtentFactor, y);
-        ctx.lineTo(-width * gridExtentFactor, y);
-    }
-    ctx.stroke();
-
-});
-*/
-
-network.on("beforeDrawing", function (ctx) {
-  var width = ctx.canvas.clientWidth;
-  var height = ctx.canvas.clientHeight;
-  var spacing = 20;
-  var gridExtentFactor = 4;
-  ctx.fillStyle = "lightgrey";
-
-  // Dessiner une grille de points
-  for (var x = -width * gridExtentFactor; x <= width * gridExtentFactor; x += spacing) {
-    for (var y = -height * gridExtentFactor; y <= height * gridExtentFactor; y += spacing) {
-      ctx.beginPath();
-      ctx.arc(x, y, 1.25, 0, 2 * Math.PI); // Dessiner un petit point (rayon 1.25)
-      ctx.fill();
-    }
-  }
-});
-
+// applyPointsBackground(network)
 
 // ✅ Gestion du Double-Clic
 network.on('doubleClick', (params) => {
@@ -185,7 +139,7 @@ document.getElementById('deleteNodeBtn').addEventListener('click', () => {
 // ✅ Supprimer un Graphe
 document.getElementById('deleteGraphBtn').addEventListener('click', () => {
   if (nodes.get().length == 0) {
-    alert('No graph to delete!');
+    notyf.error('No graph to delete!');
     return;
   }
   const confirmModal = new bootstrap.Modal('#confirmDeleteGraphModal');
@@ -219,7 +173,7 @@ document.getElementById('createEdgeBtn').addEventListener('click', () => {
   const isDirected = document.getElementById('isDirectedEdge').checked;
 
   if (!targetNode || label === '') {
-    alert('Veuillez sélectionner un nœud et entrer un label valide pour l’arête.');
+    notyf.error('Veuillez remplir les champs.');
     return;
   }
 
@@ -273,8 +227,6 @@ document.getElementById('calculateDijekstraBtn').addEventListener('click', () =>
   console.log('Nœud de Départ:', startNode);
   console.log('Nœud d\'Arrivée:', endNode);
 
-  const API_URL = 'http://127.0.0.1:5000/api/dijekstra';
-
   const data = {
     graph: {
       nodes: nodes.get(),
@@ -289,7 +241,7 @@ document.getElementById('calculateDijekstraBtn').addEventListener('click', () =>
     return
   }
   resetEdgesStyle();
-  axios.post(API_URL, data)
+  dijekstraService.calculateShortestPath(data)
     .then(res => {
       console.log('Success:', res.data);
       const selectedEdges = res.data.selectedEdges
@@ -299,15 +251,14 @@ document.getElementById('calculateDijekstraBtn').addEventListener('click', () =>
       document.getElementById("dijekstra-distance").innerHTML = `<b>Total:</b> <span>${getTotalPathDistance(selectedEdges)}</span>`
       network.selectEdges([])
       network.selectNodes([])
-      selectedEdges.forEach(edge => edges.update({ id: edge.id, color: { color: "#06D6A0"}, width: 3 }))
+      selectedEdges.forEach(edge => edges.update({ id: edge.id, color: { color: "#06D6A0" }, width: 3 }))
     })
     .catch(error => {
       console.error('Error:', error);
     });
 });
 
-// ✅ Réinitialiser les sélecteurs et les variables avec le bouton Vider
-document.getElementById('resetDijkstraBtn').addEventListener('click', () => {
+function resetDijekstraForm() {
   document.getElementById('startNodeSelect').value = '';
   document.getElementById('endNodeSelect').value = '';
   startNode = null;
@@ -315,12 +266,20 @@ document.getElementById('resetDijkstraBtn').addEventListener('click', () => {
   resetEdgesStyle()
   document.getElementById("dijekstra-path").innerHTML = ""
   document.getElementById("dijekstra-distance").innerHTML = ""
-});
+}
 
-// ✅ Fermer simplement l'accordion avec le bouton Fermer
-document.getElementById('closeDijkstraAccordionBtn').addEventListener('click', () => {
+// ✅ Réinitialiser les sélecteurs et les variables avec le bouton Vider
+document.getElementById('resetDijkstraBtn').addEventListener('click', resetDijekstraForm);
+
+function closeDijekstraAccordion() {
   const accordion = new bootstrap.Collapse('#collapseDijkstra');
   accordion.hide();
+}
+
+// ✅ Fermer simplement l'accordion avec le bouton Fermer
+document.getElementById('resetAndCloseDijkstraAccordionBtn').addEventListener('click', () => {
+  resetDijekstraForm()
+  closeDijekstraAccordion()
 });
 
 // ✅ Remplit le select avec les autres nœuds disponibles pour la liaison
@@ -411,19 +370,18 @@ function showData() {
 
 document.getElementById('showLocalDataBtn').addEventListener('click', showData);
 
-function saveData() {
-  const API_URL = 'http://127.0.0.1:5000/api/graph'; // Replace with your REST API endpoint
-  const data = {
+function saveGraph() {
+  const graph = {
     nodes: nodes.get(),
     edges: edges.get()
   }
 
-  if (data.nodes.length == 0) {
+  if (graph.nodes.length == 0) {
     notyf.error("No graph available to save!")
     return
   }
 
-  axios.post(API_URL, data)
+  graphService.saveGraph(graph)
     .then(res => {
       console.log('Success:', res.data);
       notyf.success("Graph saved successfully!")
@@ -433,11 +391,10 @@ function saveData() {
     });
 }
 
-document.getElementById('saveDataBtn').addEventListener('click', saveData);
+document.getElementById('saveGraphBtn').addEventListener('click', saveGraph);
 
 function deleteGraph() {
-  const API_URL = 'http://127.0.0.1:5000/api/graph'; // Replace with your REST API endpoint
-  axios.delete(API_URL)
+  graphService.deleteGraph()
     .then(res => {
       console.log('Success:', res);
       closeModalById('confirmDeleteGraphModal')
@@ -451,8 +408,7 @@ function deleteGraph() {
 }
 
 function loadGraph() {
-  const API_URL = 'http://127.0.0.1:5000/api/graph'; // Replace with your REST API endpoint
-  axios.get(API_URL)
+  graphService.loadGraph()
     .then(res => {
       console.log('Success:', res.data);
       nodes.clear();
