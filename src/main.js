@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 // import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import './style.css'
+import '/style.css'
 
 import { DataSet, Network } from 'vis-network/standalone'
 import * as bootstrap from 'bootstrap'
@@ -431,7 +431,7 @@ function transformGraph() {
   const allEdges = edges.get()
   const transformedGraph = {}
   allNodes.forEach(node => {
-    neighbors = {}
+    const neighbors = {}
     allEdges.forEach(edge => {
       if ((node.id == edge.from && edge.arrows == "to") || ((node.id == edge.from || node.id == edge.to) && edge.arrows != "to")) {
         neighbors[edge.to != node.id ? (allNodes.find(n => n.id == edge.to)?.label) : (allNodes.find(n => n.id == edge.from)?.label)] = Number(edge.label)
