@@ -2,8 +2,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 // import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import './style.css'
 
-import notyf from '../src/notyf-utils'
-import userService from '../src/services/userService';
+import notyf from '../notyf-config'
+import userService from '../services/userService';
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();

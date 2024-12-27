@@ -1,5 +1,5 @@
-import userService from "./services/userService";
-import { sleep } from "./utils";
+import userService from "../services/userService";
+import { sleep } from "../utils";
 
 async function verifyToken() {
     const token = localStorage.getItem('token');

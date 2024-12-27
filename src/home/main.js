@@ -1,13 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 // import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import '/style.css'
+import './style.css'
 
 import { DataSet, Network } from 'vis-network/standalone'
 import * as bootstrap from 'bootstrap'
-import notyf from './notyf-utils'
-import { formatPath, getTotalPathDistance, NAVBAR_HEIGHT } from './utils'
-import graphService from './services/graphService'
-import dijekstraService from './services/dijekstraService'
+import notyf from '../notyf-config'
+import { formatPath, getTotalPathDistance, NAVBAR_HEIGHT } from '../utils'
+import graphService from '../services/graphService'
+import dijekstraService from '../services/dijekstraService'
 import { applyPointsBackground, applyRectanglesBackground } from './network-background'
 
 
@@ -420,7 +420,7 @@ function loadGraph() {
     })
     .catch(error => {
       console.error('Error:', error);
-      notyf.error(error.response.data.msg)
+      notyf.error(error.response.data.message)
     });
 }
 
