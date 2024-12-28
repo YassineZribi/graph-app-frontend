@@ -24,8 +24,32 @@ let endNode = null;
 
 const container = document.getElementById('network');
 const data = { nodes, edges };
-const options = { /* physics: false, interaction: { dragNodes: true }, */ edges: { smooth: true } };
+const options = { /* physics: false, interaction: { dragNodes: true }, */ interaction: {zoomView: true}, edges: { smooth: true } };
 const network = new Network(container, data, options);
+
+function zoomIn() {
+  network.moveTo({
+    scale: network.getScale() * 1.2
+  });
+}
+
+document.getElementById("zoomInBtn").addEventListener("click", zoomIn)
+
+function zoomOut() {
+  network.moveTo({
+    scale: network.getScale() * 0.8
+  });
+}
+
+document.getElementById("zoomOutBtn").addEventListener("click", zoomOut)
+
+network.on('wheel', (params) => {
+  if (params.event.deltaY < 0) { // deltaY < 0: Zoom in on scroll up.
+    zoomIn();
+  } else { // deltaY > 0: Zoom out on scroll down.
+    zoomOut();
+  }
+});
 
 // applyPointsBackground(network)
 

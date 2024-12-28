@@ -8,6 +8,18 @@
   /* gap: 20px; */
 }
 
+.left {
+  position: relative;
+}
+
+#zoomBtnsContainer {
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
 .right {
   padding: 15px;
 }
