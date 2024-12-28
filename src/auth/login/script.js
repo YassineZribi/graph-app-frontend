@@ -1,9 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 // import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import './style.css'
+import '../style.css'
 
-import notyf from '../notyf-config'
-import userService from '../services/userService';
+import notyf from '../../notyf-config'
+import userService from '../../services/userService';
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -34,3 +34,15 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         loginBtn.innerHTML = loginBtnOriginalContent;
       }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const accountCreated = sessionStorage.getItem('accountCreated');
+
+    if (accountCreated) {
+      notyf.success({duration: 6000, dismissible: true, message: "Account created!", className: "toast-custom-notyf"});
+
+      // Remove the flag after showing the toast
+      sessionStorage.removeItem('accountCreated');
+
+    }
+  });

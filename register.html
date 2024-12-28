@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="/src/auth/style.css">
+</head>
+
+<body>
+    <nav class="navbar bg-dark navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="/vite.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                Mini Projet
+            </a>
+            <div>
+                <a href="/login" class="btn btn-link link-light link-underline-opacity-0" id="register">Login</a>
+            </div>
+        </div>
+    </nav>
+    <h1 class="mt-4 text-center">Sign Up</h1>
+    <form id="registerForm">
+        <input type="text" id="first_name" placeholder="First Name" required>
+        <input type="text" id="last_name" placeholder="Last Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button id="registerBtn" class="btn btn-primary" type="submit">Sign Up</button>
+        <a href="/login" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 text-end position-relative link-underline-opacity-75-hover" style="font-size: 0.8em; top: -5px;">
+            Already have an account? Sign in
+        </a>
+    </form>
+    <script type="module" src="/src/auth/register/script.js"></script>
+</body>
+
+</html>

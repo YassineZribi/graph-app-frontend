@@ -4,7 +4,7 @@ body {
     padding: 0;
 }
 
-#loginForm {
+#loginForm, #registerForm {
     margin: 20px auto;
     width: 300px;
     display: flex;
