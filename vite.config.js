@@ -7,6 +7,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         login: resolve(__dirname, 'login/index.html'),
+        notFound: resolve(__dirname, '404.html'),
       },
     },
   },
