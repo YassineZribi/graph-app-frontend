@@ -1,13 +1,42 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Page non trouvée</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404: Page Not Found</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #fff;
+    }
+    .container {
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .error-code {
+      font-size: 2rem;
+      font-weight: bold;
+      border-right: 1px solid #ccc;
+      padding-right: 1rem;
+    }
+    .error-message {
+      font-size: 1rem;
+    }
+  </style>
 </head>
 <body>
-    <h1>404</h1>
-    <p>Désolé, la page demandée n'existe pas.</p>
-    <a href="/">Retour à l'accueil</a>
+  <div class="container">
+    <div class="error-code">404</div>
+    <div class="error-message">This page could not be found.</div>
+  </div>
 </body>
 </html>
