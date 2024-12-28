@@ -10,19 +10,14 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-}
 
-#loginForm input {
-    padding: 10px;
-    font-size: 14px;
-}
-
-#loginForm button {
-    padding: 10px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.form-label {
-    margin: 0;
+    input {
+        padding: 10px;
+        font-size: 14px;
+    }
+    button {
+        padding: 10px;
+        font-size: 14px;
+        cursor: pointer;
+    }
 }
