@@ -8,7 +8,7 @@ async function verifyToken() {
 
     if (!token) {
         // Redirect immediately if no token exists
-        window.location.href = '/login/';
+        window.location.href = '/login';
         return;
     }
 
@@ -28,14 +28,14 @@ async function verifyToken() {
         // Invalid or expired token
         console.error('Auth Verification Error:', error);
         localStorage.removeItem('token');
-        // window.location.href = '/login/';
+        // window.location.href = '/login';
     }
 }
 
 // Logout Logic
 document.getElementById('logout').addEventListener('click', () => {
     localStorage.removeItem('token');
-    window.location.href = '/login/';
+    window.location.href = '/login';
 });
 
 // Verify token on page load
