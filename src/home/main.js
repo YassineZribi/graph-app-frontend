@@ -10,6 +10,8 @@ import graphService from '../services/graphService'
 import dijekstraService from '../services/dijekstraService'
 import { applyPointsBackground, applyRectanglesBackground } from './network-background'
 import { showConfirmationModal } from '../confirmation-modal'
+import { prettyPrintJson } from 'pretty-print-json'
+import { showJsonModal } from '../json-modal'
 
 
 const nodes = new DataSet();
@@ -357,7 +359,6 @@ function populateLinkNodeSelect(currentNodeId) {
 
   // Afficher les détails du lien après sélection
   select.addEventListener('change', () => {
-    const linkDetails = document.getElementById('linkDetails');
     if (select.value) {
       openLinkDetailsBlock()
     } else {
@@ -392,9 +393,11 @@ document.getElementById('closeAddNodePopoverBtn').addEventListener('click', clos
 
 
 function openLinkDetailsBlock() {
+  const linkDetails = document.getElementById('linkDetails');
   linkDetails.style.display = 'block';
 }
 function closeLinkDetailsBlock() {
+  const linkDetails = document.getElementById('linkDetails');
   linkDetails.style.display = 'none';
 
   document.getElementById('edgeLabel').value = ""
@@ -411,6 +414,7 @@ function showData() {
     edges: edges.get()
   }
   console.log(JSON.stringify(data, null, 2))
+  showJsonModal("Données brutes", prettyPrintJson.toHtml(data))
 }
 
 document.getElementById('showLocalDataBtn').addEventListener('click', showData);
@@ -471,6 +475,7 @@ function transformGraph() {
     transformedGraph[node.label] = neighbors
   })
   console.log(transformedGraph)
+  showJsonModal("Données traitées", prettyPrintJson.toHtml(transformedGraph))
 }
 
 document.getElementById('transformGraphBtn').addEventListener('click', transformGraph);
