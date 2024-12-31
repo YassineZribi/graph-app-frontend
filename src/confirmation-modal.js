@@ -1,12 +1,17 @@
 import { Modal } from 'bootstrap'
 
 // Function to show the confirmation modal
-export function showConfirmationModal(message, confirmCallback) {
+export function showConfirmationModal(message, confirmCallback, options = {confirmButton: {className: "btn-danger", textContent: "Confirmer"}}) {
     const modalMessageElement = document.getElementById('confirmationModalMessage');
     const confirmButton = document.getElementById('confirmationModalConfirmButton');
 
     // Set the modal message
     modalMessageElement.textContent = message;
+
+    if (options.confirmButton) {
+        confirmButton.classList.add(options.confirmButton.className)
+        confirmButton.innerHTML = options.confirmButton.textContent
+    }
 
     // Remove any previous click event from the confirm button
     confirmButton.onclick = null;

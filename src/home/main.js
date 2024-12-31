@@ -419,47 +419,75 @@ function showData() {
 
 document.getElementById('showLocalDataBtn').addEventListener('click', showData);
 
-function saveGraph() {
+// ✅ Enregistrer le graphe
+async function saveGraph() {
   const graph = {
     nodes: nodes.get(),
     edges: edges.get()
   }
+  try {
+    const res = await graphService.saveGraph(graph)
+    console.log('Success:', res.data);
+    notyf.success("Graph saved successfully!")
+    return true
+  } catch (error) {
+    console.error('Error:', error);
+    throw new Error(error.response?.data?.message || error.message)
+    // return false
+  }
+}
 
-  if (graph.nodes.length == 0) {
+document.getElementById('saveGraphBtn').addEventListener('click', async () => {
+  if (nodes.get().length == 0) {
     notyf.error("No graph available to save!")
     return
   }
+  try {
+    const res = await graphService.loadGraph()
+    // ✅ Afficher le Modal de Confirmation avant la sauvegarde
+    showConfirmationModal(
+      "Êtes-vous sûr de vouloir continuer et écraser le graphe enregistré ?",
+      saveGraph,
+      {confirmButton: {className: "btn-primary", textContent: "Continuer"}}
+    );
+  } catch (error) {
+    console.error('Error:', error);
+    if (error.response.status === 404) {
+      saveGraph()
+    }
+  }
+});
 
-  graphService.saveGraph(graph)
-    .then(res => {
-      console.log('Success:', res.data);
-      notyf.success("Graph saved successfully!")
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+// ✅ Enregistrer le "graphe chargé en mémoire"
+function saveLoadedGraph(data) {
+  nodes.clear();
+  edges.clear();
+  data.nodes.forEach(node => nodes.add({ id: node.id, label: node.label }))
+  data.edges.forEach(edge => edges.add({ ...edge }))
+  // nodes.add({ label, x: lastClickPosition.x, y: lastClickPosition.y });
+  // edges.add({ from: selectedNodeId, to: targetNode, label, arrows: isDirected ? 'to' : '' });
+  return true
 }
 
-document.getElementById('saveGraphBtn').addEventListener('click', saveGraph);
-
-function loadGraph() {
-  graphService.loadGraph()
-    .then(res => {
-      console.log('Success:', res.data);
-      nodes.clear();
-      edges.clear();
-      res.data.nodes.forEach(node => nodes.add({ id: node.id, label: node.label }))
-      res.data.edges.forEach(edge => edges.add({ ...edge }))
-      // nodes.add({ label, x: lastClickPosition.x, y: lastClickPosition.y });
-      // edges.add({ from: selectedNodeId, to: targetNode, label, arrows: isDirected ? 'to' : '' });
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      notyf.error(error.response.data.message)
-    });
-}
-
-document.getElementById('loadGraphBtn').addEventListener('click', loadGraph);
+document.getElementById('loadGraphBtn').addEventListener('click', async () => {
+  try {
+    const res = await graphService.loadGraph()
+    console.log('Success:', res.data);
+    if (nodes.get().length == 0) {
+      saveLoadedGraph(res.data)
+    } else {
+      // ✅ Afficher le Modal de Confirmation avant le chargement
+      showConfirmationModal(
+        "Êtes-vous sûr de vouloir continuer et écraser le graphe actuel ?",
+        () => saveLoadedGraph(res.data),
+        {confirmButton: {className: "btn-primary", textContent: "Continuer"}}
+      );
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    notyf.error(error.response?.data?.message || error.message)
+  }
+});
 
 function transformGraph() {
   const allNodes = nodes.get()
