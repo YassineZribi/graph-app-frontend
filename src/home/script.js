@@ -1,3 +1,4 @@
+import notyf from "../notyf-config";
 import userService from "../services/userService";
 import { sleep } from "../utils";
 
@@ -27,6 +28,7 @@ async function verifyToken() {
     } catch (error) {
         // Invalid or expired token
         console.error('Auth Verification Error:', error);
+        notyf.error(error.response?.data?.message || error.message)
         localStorage.removeItem('token');
         // window.location.href = '/login';
     }

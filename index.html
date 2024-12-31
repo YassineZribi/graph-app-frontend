@@ -179,63 +179,26 @@
       </div>
     </div>
 
-    <!-- ✅ Modal de Confirmation pour la Suppression d'un Graphe -->
-    <div class="modal fade" id="confirmDeleteGraphModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Confirmer la Suppression</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            Voulez-vous vraiment supprimer ce graphe ?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-            <button type="button" class="btn btn-danger" id="confirmDeleteGraphBtn">Supprimer</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ✅ Modal de Confirmation pour la Suppression d'un Nœud -->
-    <div class="modal fade" id="confirmDeleteNodeModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Confirmer la Suppression</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            Voulez-vous vraiment supprimer ce nœud ?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-            <button type="button" class="btn btn-danger" id="confirmDeleteNodeBtn">Supprimer</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ✅ Modal de Confirmation pour la Suppression d'un Lien -->
-    <div class="modal fade" id="confirmEdgeDeleteModal" tabindex="-1" aria-labelledby="confirmEdgeDeleteModalLabel"
+    <!-- ✅ Modal de Confirmation -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel"
       aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="confirmEdgeDeleteModalLabel">Confirmer la Suppression</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            Êtes-vous sûr de vouloir supprimer ce lien ?
+          <div class="modal-body" id="confirmationModalMessage">
+            Êtes-vous sûr de vouloir continuer ?
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-            <button type="button" class="btn btn-danger" id="confirmDeleteEdgeBtn">Supprimer</button>
+            <button type="button" class="btn btn-danger" id="confirmationModalConfirmButton">Confirmer</button>
           </div>
         </div>
       </div>
     </div>
+
   </div>
   <script type="module" src="/src/home/script.js"></script>
   <script type="module" src="/src/home/main.js"></script>

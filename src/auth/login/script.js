@@ -27,7 +27,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
     } catch (error) {
         console.error('Login Error:', error);
-        notyf.error('Invalid credentials')
+        notyf.error(error.response?.data?.message || error.message)
     } finally {
         // Revert button to original state
         loginBtn.disabled = false;

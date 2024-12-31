@@ -9,6 +9,7 @@ import { formatPath, getTotalPathDistance, NAVBAR_HEIGHT } from '../utils'
 import graphService from '../services/graphService'
 import dijekstraService from '../services/dijekstraService'
 import { applyPointsBackground, applyRectanglesBackground } from './network-background'
+import { showConfirmationModal } from '../confirmation-modal'
 
 
 const nodes = new DataSet();
@@ -24,7 +25,7 @@ let endNode = null;
 
 const container = document.getElementById('network');
 const data = { nodes, edges };
-const options = { /* physics: false, interaction: { dragNodes: true }, */ interaction: {zoomView: true}, edges: { smooth: true } };
+const options = { /* physics: false, interaction: { dragNodes: true }, */ interaction: { zoomView: true }, edges: { smooth: true } };
 const network = new Network(container, data, options);
 
 function zoomIn() {
@@ -98,20 +99,23 @@ document.getElementById('editEdgeBtn').addEventListener('click', () => {
   closeEditEdgePopover();
 });
 
-// ✅ Afficher le Modal de Confirmation avant la Suppression
-document.getElementById('deleteEdgeBtn').addEventListener('click', () => {
-  const confirmModal = new bootstrap.Modal(document.getElementById('confirmEdgeDeleteModal'));
-  confirmModal.show();
-
-  closeEditEdgePopover();
-});
-
 // ✅ Confirmer et Supprimer le Lien
-document.getElementById('confirmDeleteEdgeBtn').addEventListener('click', () => {
+async function confirmDeleteEdgeCallback() {
+  // Simulate an asynchronous operation, such as a backend request
   if (selectedEdgeId) {
     edges.remove(selectedEdgeId);
-    closeModalById('confirmEdgeDeleteModal')
+    return true // close modal
   }
+  return false
+}
+
+document.getElementById('deleteEdgeBtn').addEventListener('click', () => {
+  // ✅ Afficher le Modal de Confirmation avant la Suppression
+  showConfirmationModal(
+    "Êtes-vous sûr de vouloir supprimer ce lien ?",
+    confirmDeleteEdgeCallback
+  );
+  closeEditEdgePopover();
 });
 
 // ✅ Ajouter un Nœud
@@ -152,29 +156,8 @@ document.getElementById('editNodeBtn').addEventListener('click', () => {
   console.log(edges.get());
 });
 
-// ✅ Supprimer un Nœud
-document.getElementById('deleteNodeBtn').addEventListener('click', () => {
-  const confirmModal = new bootstrap.Modal('#confirmDeleteNodeModal');
-  confirmModal.show();
-
-  closeEditNodePopover();
-});
-
-// ✅ Supprimer un Graphe
-document.getElementById('deleteGraphBtn').addEventListener('click', () => {
-  if (nodes.get().length == 0) {
-    notyf.error('No graph to delete!');
-    return;
-  }
-  const confirmModal = new bootstrap.Modal('#confirmDeleteGraphModal');
-  confirmModal.show();
-});
-
-document.getElementById('confirmDeleteGraphBtn').addEventListener('click', () => {
-  deleteGraph()
-});
-
-document.getElementById('confirmDeleteNodeBtn').addEventListener('click', () => {
+// ✅ Confirmer et Supprimer le Nœud
+async function confirmDeleteNodeCallback() {
   if (selectedNodeId) {
     // Supprimer le noeud
     nodes.remove(selectedNodeId);
@@ -183,11 +166,54 @@ document.getElementById('confirmDeleteNodeBtn').addEventListener('click', () => 
     const edgesToRemove = edges.get().filter(edge => edge.from === selectedNodeId || edge.to === selectedNodeId);
     edgesToRemove.forEach(edge => edges.remove(edge.id));
 
-    closeModalById('confirmDeleteNodeModal')
-
     console.log(nodes.get())
     console.log(edges.get())
+
+    return true // close modal
   }
+  return false
+}
+
+document.getElementById('deleteNodeBtn').addEventListener('click', () => {
+  // ✅ Afficher le Modal de Confirmation avant la Suppression
+  showConfirmationModal(
+    "Êtes-vous sûr de vouloir supprimer ce nœud ?",
+    confirmDeleteNodeCallback
+  );
+  closeEditNodePopover();
+});
+
+// ✅ Confirmer et Supprimer le Graphe
+async function confirmDeleteGraphCallback() {
+  let closeModal = false;
+  try {
+    const res = await graphService.deleteGraph()
+    console.log('Success:', res);
+    notyf.success("Graph deleted successfully!")
+    closeModal = true // close modal
+  } catch (error) {
+    console.error('Error:', error);
+    if (error.response.status === 404) {
+      closeModal = true
+    }
+    // closeModal = false
+  } finally {
+    nodes.clear();
+    edges.clear();
+    return closeModal
+  }
+}
+
+document.getElementById('deleteGraphBtn').addEventListener('click', () => {
+  if (nodes.get().length == 0) {
+    notyf.error('No graph to delete!');
+    return;
+  }
+  // ✅ Afficher le Modal de Confirmation avant la Suppression
+  showConfirmationModal(
+    "Êtes-vous sûr de vouloir supprimer ce graphe ?",
+    confirmDeleteGraphCallback
+  );
 });
 
 // ✅ Lier Deux Nœuds
@@ -375,11 +401,6 @@ function closeLinkDetailsBlock() {
   document.getElementById("isDirectedEdge").checked = false;
 }
 
-function closeModalById(modalId) {
-  const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
-  modal.hide();
-}
-
 function resetEdgesStyle() {
   edges.get().forEach(edge => edges.update({ id: edge.id, color: {}, width: 1 }))
 }
@@ -416,20 +437,6 @@ function saveGraph() {
 }
 
 document.getElementById('saveGraphBtn').addEventListener('click', saveGraph);
-
-function deleteGraph() {
-  graphService.deleteGraph()
-    .then(res => {
-      console.log('Success:', res);
-      closeModalById('confirmDeleteGraphModal')
-      notyf.success("Graph deleted successfully!")
-      nodes.clear();
-      edges.clear();
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-}
 
 function loadGraph() {
   graphService.loadGraph()
