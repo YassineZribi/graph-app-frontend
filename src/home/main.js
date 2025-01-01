@@ -428,10 +428,18 @@ function resetEdgesStyle() {
   edges.get().forEach(edge => edges.update({ id: edge.id, color: {}, width: 1 }))
 }
 
+function formatNode(node) {
+  return { id: node.id, label: node.label }
+}
+
+function formatEdge(edge) {
+  return { id: edge.id, label: edge.label, from: edge.from, to: edge.to, arrows: edge.arrows }
+}
+
 function showData() {
   const data = {
-    nodes: nodes.get(),
-    edges: edges.get()
+    nodes: nodes.get().map(node => formatNode(node)),
+    edges: edges.get().map(edge => formatEdge(edge))
   }
   console.log(JSON.stringify(data, null, 2))
   showJsonModal("Données brutes", prettyPrintJson.toHtml(data))
@@ -442,8 +450,8 @@ document.getElementById('showLocalDataBtn').addEventListener('click', showData);
 // ✅ Enregistrer le graphe
 async function saveGraph() {
   const graph = {
-    nodes: nodes.get(),
-    edges: edges.get()
+    nodes: nodes.get().map(node => formatNode(node)),
+    edges: edges.get().map(edge => formatEdge(edge))
   }
   try {
     const res = await graphService.saveGraph(graph)
@@ -482,8 +490,8 @@ document.getElementById('saveGraphBtn').addEventListener('click', async () => {
 function saveLoadedGraph(data) {
   nodes.clear();
   edges.clear();
-  data.nodes.forEach(node => nodes.add({ id: node.id, label: node.label }))
-  data.edges.forEach(edge => edges.add({ ...edge }))
+  data.nodes.forEach(node => nodes.add(node))
+  data.edges.forEach(edge => edges.add(edge))
   // nodes.add({ label, x: lastClickPosition.x, y: lastClickPosition.y });
   // edges.add({ from: selectedNodeId, to: targetNode, label, arrows: isDirected ? 'to' : '' });
   return true
