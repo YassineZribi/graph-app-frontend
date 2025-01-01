@@ -39,15 +39,18 @@
         </a>
         <div class="d-flex align-items-center gap-3">
           <span class="text-white" id="user-credantials"></span>
-          <button class="btn btn-outline-danger" id="logout">Logout</button>
+          <button class="btn btn-outline-danger" id="logout">Se déconnecter</button>
         </div>
       </div>
     </nav>
     <div class="main">
       <div class="left">
-        <div id="zoomBtnsContainer">
-          <button id="zoomInBtn" title="zoom in" class="btn btn-secondary btn-sm z-1 h4">&plus;</button>
-          <button id="zoomOutBtn" title="zoom out" class="btn btn-secondary btn-sm z-1">&minus;</button>
+        <div id="networkBtnsContainer">
+          <button id="zoomInBtn" title="zoom in" class="btn btn-secondary btn-sm z-1 mb-2">&plus;</button>
+          <button id="zoomOutBtn" title="zoom out" class="btn btn-secondary btn-sm z-1 mb-2">&minus;</button>
+          <button id="deleteGraphBtn" title="delete graph" class="btn btn-outline-danger btn-sm z-1">
+            <i class="bi bi-trash"></i>
+          </button>
         </div>
         <div id="network"></div>
       </div>
@@ -57,7 +60,6 @@
           <button type="button" class="btn btn-outline-dark" id="saveGraphBtn">Enregistrer graphe</button>
           <button type="button" class="btn btn-outline-dark" id="showLocalDataBtn">Données brutes</button>
           <button type="button" class="btn btn-outline-dark" id="transformGraphBtn">Données traitées</button>
-          <button type="button" class="btn btn-outline-danger" id="deleteGraphBtn">Delete graph</button>
         </div>
         <!-- ✅ Accordion pour Algorithme de Dijkstra -->
         <div class="accordion mt-4" id="dijkstraAccordion">
