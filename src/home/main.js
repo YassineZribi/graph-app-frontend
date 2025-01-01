@@ -28,7 +28,26 @@ let endNode = null;
 
 const container = document.getElementById('network');
 const data = { nodes, edges };
-const options = { /* physics: false, interaction: { dragNodes: true }, */ interaction: { zoomView: true }, edges: { smooth: true } };
+// const options = { /* physics: false, interaction: { dragNodes: true }, */ interaction: { zoomView: true }, edges: { smooth: true } };
+var options = {
+  physics: {
+    enabled: true,
+    solver: 'forceAtlas2Based', // Alternative: barnesHut
+    forceAtlas2Based: {
+      gravitationalConstant: -50,
+      centralGravity: 0.005,
+      springLength: 100,
+      springConstant: 0.08
+    },
+    stabilization: {
+      enabled: true,
+      iterations: 200,
+      fit: true
+    }
+  },
+  interaction: { zoomView: true }, 
+  edges: { smooth: true }
+};
 const network = new Network(container, data, options);
 
 function zoomIn() {
