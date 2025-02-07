@@ -35,10 +35,10 @@ export function showConfirmationModal(message, confirmCallback, options = {confi
                 const modal = Modal.getInstance(document.getElementById('confirmationModal'));
                 modal.hide();
             } else {
-                alert('Action failed. Please try again.');
+                alert('L\'action a échoué. Veuillez réessayer.');
             }
         } catch (error) {
-            alert('An error occurred: ' + error.message);
+            alert('Une erreur s\'est produite : ' + error.message);
         } finally {
             // Revert button to original state
             confirmButton.disabled = false;

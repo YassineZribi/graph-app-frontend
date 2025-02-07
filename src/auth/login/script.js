@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const accountCreated = sessionStorage.getItem('accountCreated');
 
     if (accountCreated) {
-      notyf.success({duration: 6000, dismissible: true, message: "Account created!", className: "toast-custom-notyf"});
+      notyf.success({duration: 6000, dismissible: true, message: "Compte créé !", className: "toast-custom-notyf"});
 
       // Remove the flag after showing the toast
       sessionStorage.removeItem('accountCreated');

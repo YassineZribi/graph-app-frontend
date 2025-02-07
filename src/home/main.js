@@ -144,7 +144,7 @@ document.getElementById('deleteEdgeBtn').addEventListener('click', () => {
 document.getElementById('addNodeBtn').addEventListener('click', () => {
   const label = document.getElementById('addNodeLabel').value.trim();
   if (label.length > 2 || label === '' || nodes.get({ filter: (node) => node.label === label }).length > 0) {
-    notyf.error('Label invalide ou déjà existant.');
+    notyf.error('Label invalide ou déjà existant');
     return;
   }
   nodes.add({ label, x: lastClickPosition.x, y: lastClickPosition.y });
@@ -155,7 +155,7 @@ document.getElementById('addNodeBtn').addEventListener('click', () => {
 document.getElementById('editNodeBtn').addEventListener('click', () => {
   const label = document.getElementById('editNodeLabel').value;
   if (label.length > 2 || label === '' || nodes.get({ filter: (node) => node.label === label }).length > 0) {
-    notyf.error('Label invalide ou déjà existant.');
+    notyf.error('Label invalide ou déjà existant');
     return;
   }
   // Mettre à jour le nœud
@@ -211,7 +211,7 @@ async function confirmDeleteGraphCallback() {
   try {
     const res = await graphService.deleteGraph()
     console.log('Success:', res);
-    notyf.success("Graph deleted successfully!")
+    notyf.success(res.data.message)
     closeModal = true // close modal
   } catch (error) {
     console.error('Error:', error);
@@ -228,7 +228,7 @@ async function confirmDeleteGraphCallback() {
 
 document.getElementById('deleteGraphBtn').addEventListener('click', () => {
   if (nodes.get().length == 0) {
-    notyf.error('No graph to delete!');
+    notyf.error('Aucun graphe à supprimer');
     return;
   }
   // ✅ Afficher le Modal de Confirmation avant la Suppression
@@ -245,7 +245,7 @@ document.getElementById('createEdgeBtn').addEventListener('click', () => {
   const isDirected = document.getElementById('isDirectedEdge').checked;
 
   if (!targetNode || label === '') {
-    notyf.error('Veuillez remplir les champs.');
+    notyf.error('Veuillez remplir les champs');
     return;
   }
 
@@ -309,7 +309,7 @@ document.getElementById('calculateDijekstraBtn').addEventListener('click', () =>
   }
 
   if (data.graph.nodes.length == 0 || !startNode || !endNode) {
-    notyf.error("Can't perform Dijekstra algorithm!")
+    notyf.error("Impossible d'exécuter l'algorithme de Dijekstra !")
     return
   }
   resetEdgesStyle();
@@ -455,8 +455,8 @@ async function saveGraph() {
   }
   try {
     const res = await graphService.saveGraph(graph)
-    console.log('Success:', res.data);
-    notyf.success("Graph saved successfully!")
+    console.log('Success:', res);
+    notyf.success(res.data.message)
     return true
   } catch (error) {
     console.error('Error:', error);
@@ -467,7 +467,7 @@ async function saveGraph() {
 
 document.getElementById('saveGraphBtn').addEventListener('click', async () => {
   if (nodes.get().length == 0) {
-    notyf.error("No graph available to save!")
+    notyf.error("Aucun graphe à sauvegarder")
     return
   }
   try {
